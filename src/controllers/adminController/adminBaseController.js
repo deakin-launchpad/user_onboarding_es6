@@ -2,7 +2,7 @@ import Service from '../../services';
 import async from "async";
 import UniversalFunctions from "../../utils/universalFunctions";
 
-var TokenManager = require("../../lib/tokenManager");
+import TokenManager from "../../lib/tokenManager";
 const ERROR = UniversalFunctions.CONFIG.APP_CONSTANTS.STATUS_MSG.ERROR;
 const Config = UniversalFunctions.CONFIG;
 
@@ -101,7 +101,7 @@ const adminLogin = (payload, callback) => {
 
 const accessTokenLogin = function (userData, callback) {
   var appVersion;
-  var userdata = {};
+  var userdata = userData;
   var userFound = null;
   async.series(
     [
