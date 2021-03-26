@@ -1,7 +1,7 @@
 export const superAdmins = [
     {
-        name: "snachit dang",
-        email: "sanchitdang@admin.com",
+        name: "sanchit dang",
+        email: "launchpad@admin.com",
         password: "123456"
     },
 ];

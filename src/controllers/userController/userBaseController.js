@@ -13,8 +13,8 @@
 import Service from '../../services';
 import async from "async";
 import UniversalFunctions from "../../utils/universalFunctions";
+import TokenManager from '../../lib/tokenManager';
 
-const TokenManager = require("../../lib/tokenManager");
 const CodeGenerator = require("../../lib/codeGenerator");
 const ERROR = UniversalFunctions.CONFIG.APP_CONSTANTS.STATUS_MSG.ERROR;
 const _ = require("underscore");
@@ -174,7 +174,7 @@ const verifyOTP = (payload, callback) => {
     [
       (cb) => {
         const query = {
-          _id: userData._id
+          _id: userData.userId
         };
         const options = { lean: true };
         Service.UserService.getRecord(query, {}, options, (err, data) => {
@@ -197,7 +197,7 @@ const verifyOTP = (payload, callback) => {
       (cb) => {
         //trying to update customer
         const criteria = {
-          _id: userData._id,
+          _id: userData.userId,
           OTPCode: payloadData.OTPCode
         };
         const setQuery = {
@@ -304,7 +304,7 @@ const loginUser = (payloadData, callback) => {
             id: userFound._id,
             type: UniversalFunctions.CONFIG.APP_CONSTANTS.DATABASE.USER_ROLES.USER
           };
-          TokenManager.setToken(tokenData, function (err, output) {
+          TokenManager.setToken(tokenData, payloadData.deviceData, function (err, output) {
             if (err) {
               cb(err);
             } else {
@@ -353,7 +353,7 @@ var resendOTP = function (userData, callback) {
     [
       function (cb) {
         var query = {
-          _id: userData._id
+          _id: userData.userId
         };
         var options = { lean: true };
         Service.UserService.getRecord(query, {}, options, function (err, data) {
@@ -392,7 +392,7 @@ var resendOTP = function (userData, callback) {
       },
       function (cb) {
         var criteria = {
-          _id: userData._id
+          _id: userData.userId
         };
         var setQuery = {
           $set: {
@@ -443,7 +443,7 @@ var accessTokenLogin = function (userData, callback) {
     [
       function (cb) {
         var criteria = {
-          _id: userData._id
+          _id: userData.userId
         };
         Service.UserService.getRecord(criteria, { password: 0 }, {}, function (
           err,
@@ -482,46 +482,11 @@ var accessTokenLogin = function (userData, callback) {
   );
 };
 
-var logoutCustomer = function (userData, callbackRoute) {
-  async.series(
-    [
-      function (cb) {
-        var criteria = {
-          _id: userData._id
-        };
-        Service.UserService.getRecord(criteria, {}, {}, function (err, data) {
-          if (err) cb(err);
-          else {
-            if (data.length == 0) cb(ERROR.INCORRECT_ACCESSTOKEN);
-            else {
-              cb();
-            }
-          }
-        });
-      },
-      function (callback) {
-        var condition = { _id: userData._id };
-        var dataToUpdate = { $unset: { accessToken: 1 } };
-        Service.UserService.updateUser(condition, dataToUpdate, {}, function (
-          err,
-          result
-        ) {
-          if (err) {
-            callback(err);
-          } else {
-            callback();
-          }
-        });
-      }
-    ],
-    function (error, result) {
-      if (error) {
-        return callbackRoute(error);
-      } else {
-        return callbackRoute(null);
-      }
-    }
-  );
+var logoutCustomer = function (tokenData, callback) {
+  Service.TokenService.deleteRecord({ _id: tokenData._id }, (err) => {
+    if (err) callback(err);
+    else callback();
+  });
 };
 
 var getProfile = function (userData, callback) {
@@ -530,7 +495,7 @@ var getProfile = function (userData, callback) {
     [
       function (cb) {
         var query = {
-          _id: userData._id
+          _id: userData.userId
         };
         var projection = {
           __v: 0,
@@ -571,7 +536,7 @@ var changePassword = function (userData, payloadData, callbackRoute) {
     [
       function (cb) {
         var query = {
-          _id: userData._id
+          _id: userData.userId
         };
         var options = { lean: true };
         Service.UserService.getRecord(query, {}, options, function (err, data) {
@@ -589,7 +554,7 @@ var changePassword = function (userData, payloadData, callbackRoute) {
       },
       function (callback) {
         var query = {
-          _id: userData._id
+          _id: userData.userId
         };
         var projection = {
           password: 1,
@@ -638,7 +603,7 @@ var changePassword = function (userData, payloadData, callbackRoute) {
         else {
           dataToUpdate = { $set: { password: newPassword } };
         }
-        var condition = { _id: userData._id };
+        var condition = { _id: userData.userId };
         Service.UserService.updateRecord(condition, dataToUpdate, {}, function (
           err,
           user
