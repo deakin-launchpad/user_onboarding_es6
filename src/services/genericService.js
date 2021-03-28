@@ -38,6 +38,7 @@ export default class GenericService {
      * @param {Function} callback 
      */
     updateRecord(criteria, data, options, callback) {
+        data.updatedAt = Date.now();
         options.lean = true;
         options.new = true;
         MODELS[this.modelName].findOneAndUpdate(criteria, data, options, callback);
