@@ -58,12 +58,12 @@ const setTokenInDB = function (userId, userType, tokenData, callback) {
   switch (userType) {
     case Config.APP_CONSTANTS.DATABASE.USER_ROLES.SUPERADMIN:
     case Config.APP_CONSTANTS.DATABASE.USER_ROLES.ADMIN: {
-      objectToCreate = { adminId: userId, ...tokenData };
+      objectToCreate = { adminId: userId, ...tokenData, updatedAt: Date.now() };
       criteria = { adminId: userId, deviceUUID: tokenData.deviceUUID };
       break;
     }
     default: {
-      objectToCreate = { userId: userId, ...tokenData };
+      objectToCreate = { userId: userId, ...tokenData, updatedAt: Date.now() };
       criteria = { userId, deviceUUID: tokenData.deviceUUID };
     }
   }
@@ -76,7 +76,7 @@ const setTokenInDB = function (userId, userType, tokenData, callback) {
         }
       });
     } else {
-      Services.TokenService.updateRecord(criteria, tokenData, (err) => {
+      Services.TokenService.updateRecord(criteria, { ...tokenData, updatedAt: Date.now() }, (err) => {
         if (err) callback(err);
         else {
           callback();

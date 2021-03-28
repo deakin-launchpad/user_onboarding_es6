@@ -18,6 +18,8 @@ const token = new Schema({
     deviceName: { type: String, required: true },
     userId: { type: Schema.Types.ObjectId, ref: 'user' },
     adminId: { type: Schema.Types.ObjectId, ref: 'admin' },
+    createdAt: { type: Date, default: Date.now() },
+    updatedAt: { type: Date, default: Date.now() }
 });
 
 export default model('token', token);

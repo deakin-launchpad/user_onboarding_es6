@@ -122,7 +122,7 @@ const login = {
         deviceData: Joi.object({
           deviceType: Joi.string().valid(...Object.values(Config.APP_CONSTANTS.DATABASE.DEVICE_TYPES)).required(),
           deviceName: Joi.string().required(),
-          deviceUUID: Joi.string().required(),
+          deviceUUID: Joi.string().guid().required(),
         }).label('deviceData')
       }).label("User: Login"),
       failAction: UniversalFunctions.failActionFunction
