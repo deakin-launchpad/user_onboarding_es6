@@ -5,7 +5,7 @@
   "version": "1.1.0",
   "private": false,
   "engines": {
-    "node": "12.*"
+    "node": "14.*"
   },
   "scripts": {
     "start": "npx babel-node src/entry.js",
