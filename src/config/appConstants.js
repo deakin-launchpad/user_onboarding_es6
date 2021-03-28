@@ -46,6 +46,11 @@ var STATUS_MSG = {
       customMessage: 'Invalid id provided : ',
       type: 'INVALID_ID'
     },
+    INVALID_UUID: {
+      statusCode: 400,
+      customMessage: 'Invalid Device ID',
+      type: 'INVALID_UUID'
+    },
     DUPLICATE: {
       statusCode: 400,
       customMessage: 'Duplicate entry',
