@@ -6,5 +6,6 @@ export default {
   UserService: new GenericService('User'),
   ForgetPasswordService,
   AdminService: new GenericService('Admin'),
-  TokenService: new GenericService('Token')
+  TokenService: new GenericService('Token'),
+  SSOManagerService: new GenericService('SSO'),
 };

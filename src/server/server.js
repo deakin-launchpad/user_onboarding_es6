@@ -1,5 +1,6 @@
 import ServerHelper from "./helpers";
 import SocketManager from "../lib/socketManager";
+import SSOManager from "../lib/ssoManager";
 
 /**
  * @author Sanchit Dang
@@ -17,6 +18,8 @@ const initServer = async () => {
 
   //Default Routes
   ServerHelper.setDefaultRoute(server)
+  
+  SSOManager.createRoute(server);
 
   // Add routes to Swagger documentation
   ServerHelper.addSwaggerRoutes(server);
