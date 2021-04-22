@@ -1,8 +1,7 @@
 import { Schema, model } from "mongoose";
-import UniversalFunctions from "../utils/universalFunctions";
 
 const sso = new Schema({
-  ssoString: { type: Schema.Types.String, default: UniversalFunctions.generateUrlSafeRandomString() },
+  ssoString: { type: Schema.Types.String, required: true },
   name: { type: Schema.Types.String },
   email: { type: Schema.Types.String },
 });

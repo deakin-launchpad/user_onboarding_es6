@@ -19,7 +19,8 @@ const authCallback = (payloadData, callback) => {
         (cb) => {
             var dataToSave = {
                 name: payloadData.name,
-                email: payloadData.email
+                email: payloadData.email,
+                ssoString: UniversalFunctions.generateUrlSafeRandomString()
             }
             Service.SSOManagerService.createRecord(dataToSave, (err, data) => {
                 if (err) cb(err)
