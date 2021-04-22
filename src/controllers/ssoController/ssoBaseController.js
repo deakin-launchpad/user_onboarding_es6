@@ -56,6 +56,7 @@ const validateUserSSO = (payloadData, callback) => {
                     if (data.length == 0) cb(ERROR.SSO_STRING_EXPIRED)
                     else {
                         ssoData = (data && data[0]) || null;
+                        cb();
                     }
                 }
             })
@@ -64,8 +65,8 @@ const validateUserSSO = (payloadData, callback) => {
             var criteria = {
                 _id: ssoData._id
             }
-            Service.SSOManagerService.deleteRecord(criteria,(err,data) => {
-                if(err) cb(err)
+            Service.SSOManagerService.deleteRecord(criteria, (err, data) => {
+                if (err) cb(err)
                 else cb()
             })
         },
@@ -92,7 +93,7 @@ const validateUserSSO = (payloadData, callback) => {
             if (newUser) {
                 var nameArray = ssoData.name.split(" ")
                 const firstName = nameArray[0];
-                const lastName = firstName;
+                let lastName = firstName;
                 if (nameArray.length >= 2) {
                     lastName = nameArray[0];
                 }
