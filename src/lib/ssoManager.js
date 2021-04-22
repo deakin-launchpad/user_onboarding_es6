@@ -1,8 +1,6 @@
 import 'dotenv/config';
 import Hapi from "@hapi/hapi";
 import JWTSimple from 'jwt-simple';
-import Joi from "joi";
-import Services from '../services/index'
 import universalFunctions from "../utils/universalFunctions";
 import Controllers from "../controllers";
 import CONFIG from "../config";
@@ -34,12 +32,12 @@ class SSOManager {
               email: attrs.mail,
               name: attrs.displayname
             };
-              Controllers.SSOBaseController.authCallback(user,(err,data) => {
-                if(err) reject(err)
-                else {
-                  resolve(res.redirect(this.appUrl + `/${data.ssoData.ssoString}`))
-                }
-              });
+            Controllers.SSOBaseController.authCallback(user, (err, data) => {
+              if (err) reject(err)
+              else {
+                resolve(res.redirect(this.appUrl + `/${data.ssoData.ssoString}`))
+              }
+            });
           }).catch(error => {
             reject(error)
           });
@@ -47,34 +45,28 @@ class SSOManager {
       }
     });
 
+    /**
+     * SSO Validation
+     * @description API to validate ssoToken
+     * @param {Object} payload
+     * @param {String} obj.ssoToken
+     * @param {Object} obj.deviceData
+     * @param {String} obj.deviceData.deviceType
+     * @param {String} obj.deviceData.deviceName
+     * @param {String} obj.deviceData.deviceUUID
+     */
     server.route({
       method: 'POST',
       path: '/api/sso/auth/validate',
       handler: (req, res) => {
         return new Promise((resolve, reject) => {
           const payloadData = req.payload;
-          Controllers.SSOBaseController.validateUserSSO(payloadData,(err,data) => {
-            if(err) reject(universalFunctions.sendError(err))
-            else resolve(universalFunctions.sendSuccess(CONFIG.APP_CONSTANTS.STATUS_MSG.SUCCESS.DEFAULT,data))
+          Controllers.SSOBaseController.validateUserSSO(payloadData, (err, data) => {
+            if (err) reject(universalFunctions.sendError(err))
+            else resolve(universalFunctions.sendSuccess(CONFIG.APP_CONSTANTS.STATUS_MSG.SUCCESS.DEFAULT, data))
           })
         })
       }
-      // validate: {
-      //   payload: Joi.object({
-      //     ssoToken: Joi.string().required(),
-      //     deviceData: Joi.object({
-      //       deviceType: Joi.string().valid(...Object.values(CONFIG.APP_CONSTANTS.DATABASE.DEVICE_TYPES)).required(),
-      //       deviceName: Joi.string().required(),
-      //       deviceUUID: Joi.string().guid().required(),
-      //     }).label('deviceData')
-      //   }).label("User: SSO Validate"),
-      //   failAction: universalFunctions.failActionFunction
-      // },
-      // plugins: {
-      //   "hapi-swagger": {
-      //     responseMessages: universalFunctions.CONFIG.APP_CONSTANTS.swaggerDefaultResponseMessages
-      //   }
-      // }
     })
   }
 

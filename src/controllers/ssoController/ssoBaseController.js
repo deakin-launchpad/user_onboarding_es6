@@ -6,6 +6,13 @@ import TokenManager from "../../lib/tokenManager";
 const ERROR = UniversalFunctions.CONFIG.APP_CONSTANTS.STATUS_MSG.ERROR;
 const Config = UniversalFunctions.CONFIG;
 
+/**
+ * @description Authentication for AAF Rapid SSO
+ * @param {Object} payloadData 
+ * @param {String} payloadData.name
+ * @param {String} payloadData.email 
+ * @param {Function} callback 
+ */
 const authCallback = (payloadData, callback) => {
     let ssoData;
     async.series([
@@ -27,6 +34,13 @@ const authCallback = (payloadData, callback) => {
         else return callback(null, { ssoData: ssoData })
     })
 }
+
+/**
+ * @description SSO validation to register or login a user
+ * @param {Object} payloadData 
+ * @param {String} payloadData.ssoToken 
+ * @param {Function} callback 
+ */
 const validateUserSSO = (payloadData, callback) => {
     let ssoData, userData, accessToken;
     let newUser = false;
@@ -103,7 +117,7 @@ const validateUserSSO = (payloadData, callback) => {
                 }
             });
         }
-    ], (err, data) => {
+    ], (err) => {
         if (err) return callback(err)
         else return callback(null, { accessToken: accessToken, userData: userData })
     })
