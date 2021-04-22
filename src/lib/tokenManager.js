@@ -10,7 +10,7 @@
 * - ERROR - ‘red’
 * - FATAL - ‘magenta’
 */
-
+import 'dotenv/config';
 import Services from "../services";
 import Config from "../config";
 var Jwt = require("jsonwebtoken");

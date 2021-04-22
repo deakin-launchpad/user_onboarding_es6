@@ -38,7 +38,12 @@ const userRegister = {
         emailId: Joi.string().required(),
         phoneNumber: Joi.string().regex(/^[0-9]+$/).min(5).required(),
         countryCode: Joi.string().max(4).required().trim(),
-        password: Joi.string().required().min(5)
+        password: Joi.string().required().min(5),
+        deviceData: Joi.object({
+          deviceType: Joi.string().valid(...Object.values(Config.APP_CONSTANTS.DATABASE.DEVICE_TYPES)).required(),
+          deviceName: Joi.string().required(),
+          deviceUUID: Joi.string().guid().required(),
+        }).label('deviceData')
       }).label("User: Register"),
       failAction: UniversalFunctions.failActionFunction
     },

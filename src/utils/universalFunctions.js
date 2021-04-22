@@ -17,6 +17,7 @@ import CONFIG from "../config";
 import randomstring from "randomstring";
 import validator from "validator";
 import moment from "moment";
+import cryptoRandomString  from "crypto-random-string";
 
 
 const sendError = (data) => {
@@ -94,6 +95,11 @@ const authorizationHeaderObj = Joi.object({
 const generateRandomString = (stringLength) => {
   if (stringLength === undefined) stringLength = 12;
   return randomstring.generate(stringLength);
+};
+
+const generateUrlSafeRandomString = (stringLength) => {
+  if (stringLength === undefined) stringLength = 12;
+  return cryptoRandomString({ length: stringLength, type: 'url-safe' });;
 };
 
 const generateRandomNumber = () => {
@@ -230,6 +236,7 @@ const cleanObject = (obj, callback) => {
 
 const universalFunctions = {
   generateRandomString,
+  generateUrlSafeRandomString,
   CryptData,
   CONFIG,
   sendError,

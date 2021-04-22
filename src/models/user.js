@@ -6,13 +6,13 @@ const user = new Schema({
   emailId: { type: String, trim: true, required: true, unique: true },
   phoneNumber: {
     type: String,
-    required: true,
     trim: true,
     index: true,
     min: 5,
     max: 15
   },
   password: { type: String },
+  deakinSSO: { type: Boolean, default: false},
   initialPassword: { type: String },
   firstLogin: { type: Boolean, default: false },
   countryCode: { type: String },

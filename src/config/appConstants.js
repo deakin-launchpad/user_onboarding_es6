@@ -217,6 +217,11 @@ var STATUS_MSG = {
       statusCode: 400,
       customMessage: "Inavlid email format",
       type: "INVALID_EMAIL_FORMAT"
+    },
+    SSO_STRING_EXPIRED: {
+      statusCode: 400,
+      customMessage: "Your link has expired. Please sign in again.",
+      type: "SSO_STRING_EXPIRED"
     }
   },
   SUCCESS: {

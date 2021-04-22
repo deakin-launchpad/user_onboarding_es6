@@ -2,7 +2,7 @@ import { Schema, model } from "mongoose";
 import UniversalFunctions from "../utils/universalFunctions";
 
 const sso = new Schema({
-  ssoString: { type: Schema.Types.String, default: UniversalFunctions.generateRandomString(8) },
+  ssoString: { type: Schema.Types.String, default: UniversalFunctions.generateUrlSafeRandomString() },
   name: { type: Schema.Types.String },
   email: { type: Schema.Types.String },
 });

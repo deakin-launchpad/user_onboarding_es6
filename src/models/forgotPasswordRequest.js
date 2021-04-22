@@ -3,7 +3,7 @@ import universalFunctions from "../utils/universalFunctions"
 
 
 var forgetPasswordRequests = new Schema({
-    customerID: { type: Schema.ObjectId, ref: 'users' },
+    customerID: { type: Schema.Types.ObjectId, ref: 'users' },
     userType: {
         type: String,
         enum: [

@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import Hapi from "@hapi/hapi";
 import Joi from "joi";
 import log4js from "log4js";

@@ -1,15 +1,19 @@
+import 'dotenv/config';
 import Hapi from "@hapi/hapi";
 import JWTSimple from 'jwt-simple';
+import Joi from "joi";
 import Services from '../services/index'
 import universalFunctions from "../utils/universalFunctions";
+import Controllers from "../controllers";
+import CONFIG from "../config";
 
 class ValidationError extends Error { }
 
 class SSOManager {
 
   constructor() {
-    this.jwtSecret = 'xtE4IOHWF4oBMs8dlVgh';
-    this.appUrl = 'http://localhost:3000/auth/callback';
+    this.jwtSecret = process.env.JWT_SECRET_SSO;
+    this.appUrl = process.env.APP_URL_SSO;
   }
 
   /**
@@ -30,13 +34,12 @@ class SSOManager {
               email: attrs.mail,
               name: attrs.displayname
             };
-            Services.SSOManagerService.createRecord({
-              name: user.name,
-              email: user.email
-            }, (err, data) => {
-              if (err) reject(err);
-              else resolve(res.redirect(this.appUrl + `/${data.ssoString}`));
-            });
+              Controllers.SSOBaseController.authCallback(user,(err,data) => {
+                if(err) reject(err)
+                else {
+                  resolve(res.redirect(this.appUrl + `/${data.ssoData.ssoString}`))
+                }
+              });
           }).catch(error => {
             reject(error)
           });
@@ -45,18 +48,33 @@ class SSOManager {
     });
 
     server.route({
-      method: 'GET',
-      path: '/api/sso/auth/validate/{ssoToken}',
+      method: 'POST',
+      path: '/api/sso/auth/validate',
       handler: (req, res) => {
         return new Promise((resolve, reject) => {
-          const ssoString = req.params.ssoToken;
-          Services.SSOManagerService.getRecord({ ssoString: ssoString }, {}, {}, (err, data) => {
-            if (err) return reject(err);
-            else if (data.length === 0) return reject();
-            return resolve(universalFunctions.sendSuccess('Success', data[0]));
+          const payloadData = req.payload;
+          Controllers.SSOBaseController.validateUserSSO(payloadData,(err,data) => {
+            if(err) reject(universalFunctions.sendError(err))
+            else resolve(universalFunctions.sendSuccess(CONFIG.APP_CONSTANTS.STATUS_MSG.SUCCESS.DEFAULT,data))
           })
         })
       }
+      // validate: {
+      //   payload: Joi.object({
+      //     ssoToken: Joi.string().required(),
+      //     deviceData: Joi.object({
+      //       deviceType: Joi.string().valid(...Object.values(CONFIG.APP_CONSTANTS.DATABASE.DEVICE_TYPES)).required(),
+      //       deviceName: Joi.string().required(),
+      //       deviceUUID: Joi.string().guid().required(),
+      //     }).label('deviceData')
+      //   }).label("User: SSO Validate"),
+      //   failAction: universalFunctions.failActionFunction
+      // },
+      // plugins: {
+      //   "hapi-swagger": {
+      //     responseMessages: universalFunctions.CONFIG.APP_CONSTANTS.swaggerDefaultResponseMessages
+      //   }
+      // }
     })
   }
 

@@ -123,7 +123,7 @@ const createUser = (payloadData, callback) => {
             id: customerData._id,
             type: UniversalFunctions.CONFIG.APP_CONSTANTS.DATABASE.USER_ROLES.USER
           };
-          TokenManager.setToken(tokenData, (err, output) => {
+          TokenManager.setToken(tokenData, payloadData.deviceData, (err, output) => {
             if (err) cb(err);
             else {
               accessToken = (output && output.accessToken) || null;
@@ -260,24 +260,6 @@ const loginUser = (payloadData, callback) => {
             }
           }
         }
-      },
-      (cb) => {
-        var criteria = {
-          _id: userFound._id
-        };
-        var setQuery = {
-          deviceToken: payloadData.deviceToken,
-          deviceType: payloadData.deviceType
-        };
-        Service.UserService.updateRecord(
-          criteria,
-          setQuery,
-          { new: true },
-          function (err, data) {
-            updatedUserDetails = data;
-            cb(err, data);
-          }
-        );
       },
       (cb) => {
         const criteria = { emailId: payloadData.emailId };
