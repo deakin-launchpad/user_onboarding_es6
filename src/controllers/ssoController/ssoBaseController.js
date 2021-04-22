@@ -62,6 +62,15 @@ const validateUserSSO = (payloadData, callback) => {
         },
         (cb) => {
             var criteria = {
+                _id: ssoData._id
+            }
+            Service.SSOManagerService.deleteRecord(criteria,(err,data) => {
+                if(err) cb(err)
+                else cb()
+            })
+        },
+        (cb) => {
+            var criteria = {
                 emailId: ssoData.email
             }
             Service.UserService.getRecord(criteria, {}, {}, (err, data) => {
