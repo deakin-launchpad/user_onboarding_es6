@@ -616,6 +616,8 @@ var forgetPassword = function (payloadData, callback) {
   var dataFound = null;
   var code;
   var forgotDataEntry;
+  let userFound;
+
   async.series(
     [
       function (cb) {
