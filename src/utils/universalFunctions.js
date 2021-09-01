@@ -16,8 +16,11 @@ import Boom from "@hapi/boom";
 import CONFIG from "../config";
 import randomstring from "randomstring";
 import validator from "validator";
-import moment from "moment";
 import cryptoRandomString  from "crypto-random-string";
+import Moment from 'moment';
+import { extendMoment } from 'moment-range';
+
+const moment = extendMoment(Moment);
 
 
 const sendError = (data) => {
