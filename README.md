@@ -9,6 +9,7 @@ PS : This is an ES6 translation of this [project](https://github.com/ChoudharyNa
 
 * [Manual Deployment](#manual-deployment)
 * [Upload Image/Document Guidelines](UPLOAD_IMAGE_GUIDLINE.md)
+* [Node Mailer Setup Guidelines](NODEMAILER_GUIDELINE.md)
 
 # Project Dependencies
 
