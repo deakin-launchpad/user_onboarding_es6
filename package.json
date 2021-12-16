@@ -43,6 +43,7 @@
     "moment": "2.29.1",
     "moment-range": "^4.0.2",
     "mongoose": "^5.12.2",
+    "nodemon": "^2.0.15",
     "path": "0.12.7",
     "randomstring": "1.1.5",
     "socket.io": "^4.0.0",

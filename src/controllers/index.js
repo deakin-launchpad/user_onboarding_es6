@@ -3,11 +3,13 @@ import UserBaseController from "./userController/userBaseController";
 import AdminBaseController from "./adminController/adminBaseController";
 import UploadBaseController from "./uploadController/uploadBaseController";
 import SSOBaseController from "./ssoController/ssoBaseController";
+import CardController from "./cardController/cardController";
 
 export default {
   DemoBaseController,
   UserBaseController,
   AdminBaseController,
   UploadBaseController,
-  SSOBaseController
+  SSOBaseController,
+  CardController,
 };
