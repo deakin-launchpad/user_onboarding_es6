@@ -3,6 +3,7 @@ import mongoose, { Schema } from "mongoose";
 const card = new Schema({
   title: { type: String, trim: true, required: true },
   description: { type: String, trim: true, required: true },
+  url: { type: String, trim: true, required: true },
   deakinSSO: { type: Boolean, default: false },
   firstLogin: { type: Boolean, default: false },
   code: { type: String, trim: true },
