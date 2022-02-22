@@ -5,5 +5,6 @@ export default [
     inert,
     vision,
     { plugin: require('./swagger') },
-    { plugin: require('./auth-token') }
+    { plugin: require('./auth-token') },
+    { plugin: require("./amplify-auth") },
 ];
