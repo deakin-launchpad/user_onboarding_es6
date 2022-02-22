@@ -22,6 +22,19 @@ const demoFunction = (payload, callback) => {
   return callback(null, payload);
 };
 
+/**
+ *
+ * @param {Object} userData
+ * @param {Object} payload.message
+ * @param {Function} callback
+ */
+const demoAmplifyAuthFunction = (userData,payload,callback)=>{
+  console.log(userData);
+  appLogger.info(payload.message);
+  return callback(null, payload);
+}
+
 export default {
   demoFunction: demoFunction,
+  demoAmplifyAuthFunction:demoAmplifyAuthFunction,
 };
