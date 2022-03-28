@@ -1,19 +1,17 @@
-
-
 /**
-* Please use appLogger for logging in this file try to abstain from console
-* levels of logging:
-* - TRACE - ‘blue’
-* - DEBUG - ‘cyan’
-* - INFO - ‘green’
-* - WARN - ‘yellow’
-* - ERROR - ‘red’
-* - FATAL - ‘magenta’
-*/
-import Service from '../../services';
+ * Please use appLogger for logging in this file try to abstain from console
+ * levels of logging:
+ * - TRACE - ‘blue’
+ * - DEBUG - ‘cyan’
+ * - INFO - ‘green’
+ * - WARN - ‘yellow’
+ * - ERROR - ‘red’
+ * - FATAL - ‘magenta’
+ */
+import Service from "../../services";
 import async from "async";
 import UniversalFunctions from "../../utils/universalFunctions";
-import TokenManager from '../../lib/tokenManager';
+import TokenManager from "../../lib/tokenManager";
 
 const CodeGenerator = require("../../lib/codeGenerator");
 const ERROR = UniversalFunctions.CONFIG.APP_CONSTANTS.STATUS_MSG.ERROR;
@@ -31,28 +29,36 @@ const createUser = (payloadData, callback) => {
     [
       (cb) => {
         var query = {
-          $or: [{ emailId: payloadData.emailId }]
+          $or: [{ emailId: payloadData.emailId }],
         };
-        Service.UserService.getRecord(query, {}, { lean: true }, (error, data) => {
-          if (error) cb(error);
-          else {
-            if (data && data.length > 0) {
-              if (data[0].emailVerified == true) cb(ERROR.USER_ALREADY_REGISTERED);
-              else {
-                Service.UserService.deleteUser({ _id: data[0]._id }, (err, updatedData) => {
-                  if (err) cb(err);
-                  else cb(null);
-                });
-              }
-            } else cb(null);
+        Service.UserService.getRecord(
+          query,
+          {},
+          { lean: true },
+          (error, data) => {
+            if (error) cb(error);
+            else {
+              if (data && data.length > 0) {
+                if (data[0].emailVerified == true)
+                  cb(ERROR.USER_ALREADY_REGISTERED);
+                else {
+                  Service.UserService.deleteUser(
+                    { _id: data[0]._id },
+                    (err, updatedData) => {
+                      if (err) cb(err);
+                      else cb(null);
+                    }
+                  );
+                }
+              } else cb(null);
+            }
           }
-        });
+        );
       },
       (cb) => {
         //Validate for facebookId and password
         if (!dataToSave.password) cb(ERROR.PASSWORD_REQUIRED);
         else cb();
-
       },
       (cb) => {
         //Validate countryCode
@@ -61,23 +67,22 @@ const createUser = (payloadData, callback) => {
             cb(ERROR.INVALID_COUNTRY_CODE);
           } else cb();
         } else cb(ERROR.INVALID_COUNTRY_CODE);
-
       },
       (cb) => {
         //Validate phone No
-        if (
-          dataToSave.phoneNumber &&
-          dataToSave.phoneNumber.split("")[0] == 0
-        ) cb(ERROR.INVALID_PHONE_NO_FORMAT);
+        if (dataToSave.phoneNumber && dataToSave.phoneNumber.split("")[0] == 0)
+          cb(ERROR.INVALID_PHONE_NO_FORMAT);
         else cb();
       },
       (cb) => {
-        CodeGenerator.generateUniqueCode(6,
+        CodeGenerator.generateUniqueCode(
+          6,
           UniversalFunctions.CONFIG.APP_CONSTANTS.DATABASE.USER_ROLES.USER,
           (err, numberObj) => {
             if (err) cb(err);
             else {
-              if (!numberObj || numberObj.number == null) cb(ERROR.UNIQUE_CODE_LIMIT_REACHED);
+              if (!numberObj || numberObj.number == null)
+                cb(ERROR.UNIQUE_CODE_LIMIT_REACHED);
               else {
                 uniqueCode = numberObj.number;
                 cb();
@@ -92,18 +97,21 @@ const createUser = (payloadData, callback) => {
         dataToSave.phoneNumber = payloadData.phoneNumber;
         dataToSave.registrationDate = new Date().toISOString();
         dataToSave.firstLogin = true;
-        Service.UserService.createRecord(dataToSave, (err, customerDataFromDB) => {
-          if (err) {
-            if (err.code == 11000 && err.message.indexOf("emailId_1") > -1) {
-              cb(ERROR.EMAIL_NO_EXIST);
+        Service.UserService.createRecord(
+          dataToSave,
+          (err, customerDataFromDB) => {
+            if (err) {
+              if (err.code == 11000 && err.message.indexOf("emailId_1") > -1) {
+                cb(ERROR.EMAIL_NO_EXIST);
+              } else {
+                cb(err);
+              }
             } else {
-              cb(err);
+              customerData = customerDataFromDB;
+              cb();
             }
-          } else {
-            customerData = customerDataFromDB;
-            cb();
           }
-        });
+        );
       },
       //  (cb) => {
       //     //Send SMS to User
@@ -121,27 +129,31 @@ const createUser = (payloadData, callback) => {
         if (customerData) {
           var tokenData = {
             id: customerData._id,
-            type: UniversalFunctions.CONFIG.APP_CONSTANTS.DATABASE.USER_ROLES.USER
+            type: UniversalFunctions.CONFIG.APP_CONSTANTS.DATABASE.USER_ROLES
+              .USER,
           };
-          TokenManager.setToken(tokenData, payloadData.deviceData, (err, output) => {
-            if (err) cb(err);
-            else {
-              accessToken = (output && output.accessToken) || null;
-              cb();
+          TokenManager.setToken(
+            tokenData,
+            payloadData.deviceData,
+            (err, output) => {
+              if (err) cb(err);
+              else {
+                accessToken = (output && output.accessToken) || null;
+                cb();
+              }
             }
-          });
+          );
         } else cb(ERROR.IMP_ERROR);
-
       },
       (cb) => {
         appVersion = {
           latestIOSVersion: 100,
           latestAndroidVersion: 100,
           criticalAndroidVersion: 100,
-          criticalIOSVersion: 100
+          criticalIOSVersion: 100,
         };
         cb(null);
-      }
+      },
     ],
     (err, data) => {
       if (err) callback(err);
@@ -149,10 +161,9 @@ const createUser = (payloadData, callback) => {
         callback(null, {
           accessToken: accessToken,
           otpCode: customerData.OTPCode,
-          userDetails: UniversalFunctions.deleteUnnecessaryUserData(
-            customerData
-          ),
-          appVersion: appVersion
+          userDetails:
+            UniversalFunctions.deleteUnnecessaryUserData(customerData),
+          appVersion: appVersion,
         });
       }
     }
@@ -160,7 +171,7 @@ const createUser = (payloadData, callback) => {
 };
 
 /**
- * 
+ *
  * @param {Object} payload Payload
  * @param {Object} payload.userData UserData
  * @param {any} payload.data Payload Data
@@ -174,7 +185,7 @@ const verifyOTP = (payload, callback) => {
     [
       (cb) => {
         const query = {
-          _id: userData.userId
+          _id: userData.userId,
         };
         const options = { lean: true };
         Service.UserService.getRecord(query, {}, options, (err, data) => {
@@ -192,27 +203,31 @@ const verifyOTP = (payload, callback) => {
         //Check verification code :
         if (payloadData.OTPCode == customerData.OTPCode) cb();
         else cb(ERROR.INVALID_CODE);
-
       },
       (cb) => {
         //trying to update customer
         const criteria = {
           _id: userData.userId,
-          OTPCode: payloadData.OTPCode
+          OTPCode: payloadData.OTPCode,
         };
         const setQuery = {
           $set: { emailVerified: true },
-          $unset: { OTPCode: 1 }
+          $unset: { OTPCode: 1 },
         };
         const options = { new: true };
-        Service.UserService.updateRecord(criteria, setQuery, options, (err, updatedData) => {
-          if (err) cb(err);
-          else {
-            if (!updatedData) cb(ERROR.INVALID_CODE);
-            else cb();
+        Service.UserService.updateRecord(
+          criteria,
+          setQuery,
+          options,
+          (err, updatedData) => {
+            if (err) cb(err);
+            else {
+              if (!updatedData) cb(ERROR.INVALID_CODE);
+              else cb();
+            }
           }
-        });
-      }
+        );
+      },
     ],
     (err, result) => {
       if (err) callback(err);
@@ -249,12 +264,14 @@ const loginUser = (payloadData, callback) => {
             if (
               userFound &&
               userFound.password !=
-              UniversalFunctions.CryptData(payloadData.password)
+                UniversalFunctions.CryptData(payloadData.password)
             ) {
               cb(ERROR.INCORRECT_PASSWORD);
-            } else if (userFound.emailVerified == false) {
-              cb(ERROR.NOT_REGISTERED);
-            } else {
+            }
+            // else if (userFound.emailVerified == false) {
+            //   cb(ERROR.NOT_REGISTERED);
+            // }
+            else {
               successLogin = true;
               cb();
             }
@@ -269,35 +286,45 @@ const loginUser = (payloadData, callback) => {
           initialPassword: 0,
           OTPCode: 0,
           code: 0,
-          codeUpdatedAt: 0
+          codeUpdatedAt: 0,
         };
         const option = { lean: true };
-        Service.UserService.getRecord(criteria, projection, option, (err, result) => {
-          if (err) cb(err);
-          else {
-            userFound = (result && result[0]) || null;
-            cb();
+        Service.UserService.getRecord(
+          criteria,
+          projection,
+          option,
+          (err, result) => {
+            if (err) cb(err);
+            else {
+              userFound = (result && result[0]) || null;
+              cb();
+            }
           }
-        });
+        );
       },
       (cb) => {
         if (successLogin) {
           const tokenData = {
             id: userFound._id,
-            type: UniversalFunctions.CONFIG.APP_CONSTANTS.DATABASE.USER_ROLES.USER
+            type: UniversalFunctions.CONFIG.APP_CONSTANTS.DATABASE.USER_ROLES
+              .USER,
           };
-          TokenManager.setToken(tokenData, payloadData.deviceData, function (err, output) {
-            if (err) {
-              cb(err);
-            } else {
-              if (output && output.accessToken) {
-                accessToken = output && output.accessToken;
-                cb();
+          TokenManager.setToken(
+            tokenData,
+            payloadData.deviceData,
+            function (err, output) {
+              if (err) {
+                cb(err);
               } else {
-                cb(ERROR.IMP_ERROR);
+                if (output && output.accessToken) {
+                  accessToken = output && output.accessToken;
+                  cb();
+                } else {
+                  cb(ERROR.IMP_ERROR);
+                }
               }
             }
-          });
+          );
         } else cb(ERROR.IMP_ERROR);
       },
       (cb) => {
@@ -305,10 +332,10 @@ const loginUser = (payloadData, callback) => {
           latestIOSVersion: 100,
           latestAndroidVersion: 100,
           criticalAndroidVersion: 100,
-          criticalIOSVersion: 100
+          criticalIOSVersion: 100,
         };
         cb(null);
-      }
+      },
     ],
     (err, data) => {
       if (err) callback(err);
@@ -316,7 +343,7 @@ const loginUser = (payloadData, callback) => {
         callback(null, {
           accessToken: accessToken,
           userDetails: UniversalFunctions.deleteUnnecessaryUserData(userFound),
-          appVersion: appVersion
+          appVersion: appVersion,
         });
       }
     }
@@ -335,7 +362,7 @@ var resendOTP = function (userData, callback) {
     [
       function (cb) {
         var query = {
-          _id: userData.userId
+          _id: userData.userId,
         };
         var options = { lean: true };
         Service.UserService.getRecord(query, {}, options, function (err, data) {
@@ -374,19 +401,19 @@ var resendOTP = function (userData, callback) {
       },
       function (cb) {
         var criteria = {
-          _id: userData.userId
+          _id: userData.userId,
         };
         var setQuery = {
           $set: {
             OTPCode: uniqueCode,
-            codeUpdatedAt: new Date().toISOString()
-          }
+            codeUpdatedAt: new Date().toISOString(),
+          },
         };
         var options = {
-          lean: true
+          lean: true,
         };
         Service.UserService.updateRecord(criteria, setQuery, options, cb);
-      }
+      },
     ],
     function (err, result) {
       callback(err, { OTPCode: uniqueCode });
@@ -396,25 +423,30 @@ var resendOTP = function (userData, callback) {
 
 var getOTP = function (payloadData, callback) {
   var query = {
-    emailId: payloadData.emailId
+    emailId: payloadData.emailId,
   };
   var projection = {
     _id: 0,
-    OTPCode: 1
+    OTPCode: 1,
   };
   var options = { lean: true };
-  Service.UserService.getRecord(query, projection, options, function (err, data) {
-    if (err) {
-      callback(err);
-    } else {
-      var customerData = (data && data[0]) || null;
-      if (customerData == null || customerData.OTPCode == undefined) {
-        callback(ERROR.OTP_CODE_NOT_FOUND);
+  Service.UserService.getRecord(
+    query,
+    projection,
+    options,
+    function (err, data) {
+      if (err) {
+        callback(err);
       } else {
-        callback(null, customerData);
+        var customerData = (data && data[0]) || null;
+        if (customerData == null || customerData.OTPCode == undefined) {
+          callback(ERROR.OTP_CODE_NOT_FOUND);
+        } else {
+          callback(null, customerData);
+        }
       }
     }
-  });
+  );
 };
 
 var accessTokenLogin = function (userData, callback) {
@@ -425,39 +457,41 @@ var accessTokenLogin = function (userData, callback) {
     [
       function (cb) {
         var criteria = {
-          _id: userData.userId
+          _id: userData.userId,
         };
-        Service.UserService.getRecord(criteria, { password: 0 }, {}, function (
-          err,
-          data
-        ) {
-          if (err) cb(err);
-          else {
-            if (data.length == 0) cb(ERROR.INCORRECT_ACCESSTOKEN);
+        Service.UserService.getRecord(
+          criteria,
+          { password: 0 },
+          {},
+          function (err, data) {
+            if (err) cb(err);
             else {
-              userFound = (data && data[0]) || null;
-              if (userFound.isBlocked) cb(ERROR.ACCOUNT_BLOCKED);
-              else cb();
+              if (data.length == 0) cb(ERROR.INCORRECT_ACCESSTOKEN);
+              else {
+                userFound = (data && data[0]) || null;
+                if (userFound.isBlocked) cb(ERROR.ACCOUNT_BLOCKED);
+                else cb();
+              }
             }
           }
-        });
+        );
       },
       function (cb) {
         appVersion = {
           latestIOSVersion: 100,
           latestAndroidVersion: 100,
           criticalAndroidVersion: 100,
-          criticalIOSVersion: 100
+          criticalIOSVersion: 100,
         };
         cb(null);
-      }
+      },
     ],
     function (err, user) {
       if (!err)
         callback(null, {
           accessToken: userdata.accessToken,
           userDetails: UniversalFunctions.deleteUnnecessaryUserData(userFound),
-          appVersion: appVersion
+          appVersion: appVersion,
         });
       else callback(err);
     }
@@ -477,31 +511,33 @@ var getProfile = function (userData, callback) {
     [
       function (cb) {
         var query = {
-          _id: userData.userId
+          _id: userData.userId,
         };
         var projection = {
           __v: 0,
           password: 0,
           accessToken: 0,
-          codeUpdatedAt: 0
+          codeUpdatedAt: 0,
         };
         var options = { lean: true };
-        Service.UserService.getRecord(query, projection, options, function (
-          err,
-          data
-        ) {
-          if (err) {
-            cb(err);
-          } else {
-            if (data.length == 0) cb(ERROR.INCORRECT_ACCESSTOKEN);
-            else {
-              customerData = (data && data[0]) || null;
-              if (customerData.isBlocked) cb(ERROR.ACCOUNT_BLOCKED);
-              else cb();
+        Service.UserService.getRecord(
+          query,
+          projection,
+          options,
+          function (err, data) {
+            if (err) {
+              cb(err);
+            } else {
+              if (data.length == 0) cb(ERROR.INCORRECT_ACCESSTOKEN);
+              else {
+                customerData = (data && data[0]) || null;
+                if (customerData.isBlocked) cb(ERROR.ACCOUNT_BLOCKED);
+                else cb();
+              }
             }
           }
-        });
-      }
+        );
+      },
     ],
     function (err, result) {
       if (err) callback(err);
@@ -518,7 +554,7 @@ var changePassword = function (userData, payloadData, callbackRoute) {
     [
       function (cb) {
         var query = {
-          _id: userData.userId
+          _id: userData.userId,
         };
         var options = { lean: true };
         Service.UserService.getRecord(query, {}, options, function (err, data) {
@@ -536,71 +572,83 @@ var changePassword = function (userData, payloadData, callbackRoute) {
       },
       function (callback) {
         var query = {
-          _id: userData.userId
+          _id: userData.userId,
         };
         var projection = {
           password: 1,
-          firstLogin: 1
+          firstLogin: 1,
         };
         var options = { lean: true };
-        Service.UserService.getRecord(query, projection, options, function (
-          err,
-          data
-        ) {
-          if (err) {
-            callback(err);
-          } else {
-            customerData = (data && data[0]) || null;
-            if (customerData == null) {
-              callback(ERROR.NOT_FOUND);
+        Service.UserService.getRecord(
+          query,
+          projection,
+          options,
+          function (err, data) {
+            if (err) {
+              callback(err);
             } else {
-              if (payloadData.skip == false) {
-                if (
-                  data[0].password == oldPassword &&
-                  data[0].password != newPassword
-                ) {
-                  callback(null);
-                } else if (data[0].password != oldPassword) {
-                  callback(ERROR.WRONG_PASSWORD);
-                } else if (data[0].password == newPassword) {
-                  callback(ERROR.NOT_UPDATE);
-                }
+              customerData = (data && data[0]) || null;
+              if (customerData == null) {
+                callback(ERROR.NOT_FOUND);
+              } else {
+                if (payloadData.skip == false) {
+                  if (
+                    data[0].password == oldPassword &&
+                    data[0].password != newPassword
+                  ) {
+                    callback(null);
+                  } else if (data[0].password != oldPassword) {
+                    callback(ERROR.WRONG_PASSWORD);
+                  } else if (data[0].password == newPassword) {
+                    callback(ERROR.NOT_UPDATE);
+                  }
+                } else callback(null);
               }
-              else callback(null)
             }
           }
-        });
+        );
       },
       function (callback) {
         var dataToUpdate;
         if (payloadData.skip == true && customerData.firstLogin == false) {
-          dataToUpdate = { $set: { firstLogin: true }, $unset: { initialPassword: 1 } };
-        }
-        else if (payloadData.skip == false && customerData.firstLogin == false) {
-          dataToUpdate = { $set: { password: newPassword, firstLogin: true }, $unset: { initialPassword: 1 } };
-        }
-        else if (payloadData.skip == true && customerData.firstLogin == true) {
-          dataToUpdate = {}
-        }
-        else {
+          dataToUpdate = {
+            $set: { firstLogin: true },
+            $unset: { initialPassword: 1 },
+          };
+        } else if (
+          payloadData.skip == false &&
+          customerData.firstLogin == false
+        ) {
+          dataToUpdate = {
+            $set: { password: newPassword, firstLogin: true },
+            $unset: { initialPassword: 1 },
+          };
+        } else if (
+          payloadData.skip == true &&
+          customerData.firstLogin == true
+        ) {
+          dataToUpdate = {};
+        } else {
           dataToUpdate = { $set: { password: newPassword } };
         }
         var condition = { _id: userData.userId };
-        Service.UserService.updateRecord(condition, dataToUpdate, {}, function (
-          err,
-          user
-        ) {
-          if (err) {
-            callback(err);
-          } else {
-            if (!user || user.length == 0) {
-              callback(ERROR.NOT_FOUND);
+        Service.UserService.updateRecord(
+          condition,
+          dataToUpdate,
+          {},
+          function (err, user) {
+            if (err) {
+              callback(err);
             } else {
-              callback(null);
+              if (!user || user.length == 0) {
+                callback(ERROR.NOT_FOUND);
+              } else {
+                callback(null);
+              }
             }
           }
-        });
-      }
+        );
+      },
     ],
     function (error, result) {
       if (error) {
@@ -616,18 +664,20 @@ var forgetPassword = function (payloadData, callback) {
   var dataFound = null;
   var code;
   var forgotDataEntry;
+  let userFound;
+
   async.series(
     [
       function (cb) {
         var query = {
-          emailId: payloadData.emailId
+          emailId: payloadData.emailId,
         };
         Service.UserService.getRecord(
           query,
           {
             _id: 1,
             emailId: 1,
-            emailVerified: 1
+            emailVerified: 1,
           },
           {},
           function (err, data) {
@@ -637,15 +687,17 @@ var forgetPassword = function (payloadData, callback) {
               dataFound = (data && data[0]) || null;
               if (dataFound == null) {
                 cb(ERROR.USER_NOT_REGISTERED);
-              } else {
-                if (dataFound.emailVerified == false) {
-                  cb(ERROR.NOT_VERFIFIED);
-                } else {
-                  userFound = (data && data[0]) || null;
-                  if (userFound.isBlocked) cb(ERROR.ACCOUNT_BLOCKED);
-                  else cb();
-                }
               }
+              // else {
+              //   if (dataFound.emailVerified == false) {
+              //     cb(ERROR.NOT_VERFIFIED);
+              //   }
+              else {
+                userFound = (data && data[0]) || null;
+                if (userFound.isBlocked) cb(ERROR.ACCOUNT_BLOCKED);
+                else cb();
+              }
+              // }
             }
           }
         );
@@ -670,28 +722,30 @@ var forgetPassword = function (payloadData, callback) {
       },
       function (cb) {
         var dataToUpdate = {
-          code: code
+          code: code,
         };
         var query = {
-          _id: dataFound._id
+          _id: dataFound._id,
         };
-        Service.UserService.updateRecord(query, dataToUpdate, {}, function (
-          err,
-          data
-        ) {
-          if (err) {
-            cb(err);
-          } else {
-            cb();
+        Service.UserService.updateRecord(
+          query,
+          dataToUpdate,
+          {},
+          function (err, data) {
+            if (err) {
+              cb(err);
+            } else {
+              cb();
+            }
           }
-        });
+        );
       },
       function (cb) {
         Service.ForgetPasswordService.getForgetPasswordRequest(
           { customerID: dataFound._id },
           {
             _id: 1,
-            isChanged: 1
+            isChanged: 1,
           },
           { lean: 1 },
           function (err, data) {
@@ -709,7 +763,7 @@ var forgetPassword = function (payloadData, callback) {
           customerID: dataFound._id,
           requestedAt: Date.now(),
           userType:
-            UniversalFunctions.CONFIG.APP_CONSTANTS.DATABASE.USER_ROLES.USER
+            UniversalFunctions.CONFIG.APP_CONSTANTS.DATABASE.USER_ROLES.USER,
         };
         if (forgotDataEntry == null) {
           Service.ForgetPasswordService.createForgetPasswordRequest(
@@ -733,7 +787,7 @@ var forgetPassword = function (payloadData, callback) {
             cb
           );
         }
-      }
+      },
     ],
     function (error, result) {
       if (error) {
@@ -753,14 +807,14 @@ var resetPassword = function (payloadData, callbackRoute) {
     [
       function (callback) {
         var query = {
-          emailId: payloadData.emailId
+          emailId: payloadData.emailId,
         };
         Service.UserService.getRecord(
           query,
           {
             _id: 1,
             code: 1,
-            emailVerified: 1
+            emailVerified: 1,
           },
           { lean: true },
           function (err, result) {
@@ -793,7 +847,7 @@ var resetPassword = function (payloadData, callbackRoute) {
           { __v: 0 },
           {
             limit: 1,
-            lean: true
+            lean: true,
           },
           function (err, data) {
             if (err) {
@@ -823,7 +877,7 @@ var resetPassword = function (payloadData, callbackRoute) {
       },
       function (callback) {
         var dataToUpdate = {
-          password: UniversalFunctions.CryptData(payloadData.password)
+          password: UniversalFunctions.CryptData(payloadData.password),
         };
         appLogger.info(dataToUpdate);
         Service.UserService.updateRecord(
@@ -846,17 +900,17 @@ var resetPassword = function (payloadData, callbackRoute) {
       function (callback) {
         var dataToUpdate = {
           isChanged: true,
-          changedAt: UniversalFunctions.getTimestamp()
+          changedAt: UniversalFunctions.getTimestamp(),
         };
         Service.ForgetPasswordService.updateForgetPasswordRequest(
           { customerID: customerId },
           dataToUpdate,
           {
-            lean: true
+            lean: true,
           },
           callback
         );
-      }
+      },
     ],
     function (error) {
       if (error) {
@@ -879,5 +933,5 @@ export default {
   getProfile: getProfile,
   changePassword: changePassword,
   forgetPassword: forgetPassword,
-  resetPassword: resetPassword
+  resetPassword: resetPassword,
 };
