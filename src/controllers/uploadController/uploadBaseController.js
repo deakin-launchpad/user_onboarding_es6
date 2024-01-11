@@ -1,7 +1,7 @@
 import UniversalFunctions from "../../utils/universalFunctions";
 import UploadManager from "../../lib/uploadManager";
 import CONFIG from "../../config";
-var async = require("async");
+import async from 'async';
 var ERROR = UniversalFunctions.CONFIG.APP_CONSTANTS.STATUS_MSG.ERROR;
 
 var uploadImage = function (payloadData, callback) {

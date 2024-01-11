@@ -16,4 +16,4 @@ var forgetPasswordRequests = new Schema({
     changedAt: { type: Date }
 });
 
-module.exports = mongoose.model('forgetPasswordRequests', forgetPasswordRequests);
+export default mongoose.model('forgetPasswordRequests', forgetPasswordRequests);

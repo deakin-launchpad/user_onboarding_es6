@@ -5,8 +5,8 @@ import User from './user';
 import Admin from './admin';
 import Token from './token';
 import SSO from './sso';
+import ForgetPassword from './forgotPasswordRequest';
 
-const ForgetPassword = require('./forgotPasswordRequest');
 
 export default {
   User,
