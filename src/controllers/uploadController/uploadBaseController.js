@@ -1,20 +1,6 @@
-
-
-/**
- * Please use appLogger for logging in this file try to abstain from console
- * levels of logging:
- * - TRACE - ‘blue’
- * - DEBUG - ‘cyan’
- * - INFO - ‘green’
- * - WARN - ‘yellow’
- * - ERROR - ‘red’
- * - FATAL - ‘magenta’
- */
-
 import UniversalFunctions from "../../utils/universalFunctions";
-
-var UploadManager = require("../../lib/uploadManager");
-var CONFIG = require("../../config");
+import UploadManager from "../../lib/uploadManager";
+import CONFIG from "../../config";
 var async = require("async");
 var ERROR = UniversalFunctions.CONFIG.APP_CONSTANTS.STATUS_MSG.ERROR;
 
