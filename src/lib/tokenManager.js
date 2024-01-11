@@ -1,5 +1,3 @@
-"use strict";
-
 /**
 * Please use tokenLogger for logging in this file try to abstain from console
 * levels of logging:
@@ -13,7 +11,7 @@
 import 'dotenv/config';
 import Services from "../services";
 import Config from "../config";
-var Jwt = require("jsonwebtoken");
+import Jwt from "jsonwebtoken";
 
 /**
  * 

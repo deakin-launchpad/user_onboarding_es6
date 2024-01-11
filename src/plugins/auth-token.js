@@ -1,5 +1,5 @@
 import TokenManager from '../lib/tokenManager';
-const AuthBearer = require('hapi-auth-bearer-token');
+import AuthBearer from 'hapi-auth-bearer-token';
 
 exports.register = async function (server, options, next) {
 

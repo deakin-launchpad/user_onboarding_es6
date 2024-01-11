@@ -12,10 +12,10 @@ import Service from "../../services";
 import async from "async";
 import UniversalFunctions from "../../utils/universalFunctions";
 import TokenManager from "../../lib/tokenManager";
+import CodeGenerator from "../../lib/codeGenerator";
+import _ from "underscore";
 
-const CodeGenerator = require("../../lib/codeGenerator");
 const ERROR = UniversalFunctions.CONFIG.APP_CONSTANTS.STATUS_MSG.ERROR;
-const _ = require("underscore");
 
 const createUser = (payloadData, callback) => {
   let accessToken = null;
@@ -264,7 +264,7 @@ const loginUser = (payloadData, callback) => {
             if (
               userFound &&
               userFound.password !=
-                UniversalFunctions.CryptData(payloadData.password)
+              UniversalFunctions.CryptData(payloadData.password)
             ) {
               cb(ERROR.INCORRECT_PASSWORD);
             }

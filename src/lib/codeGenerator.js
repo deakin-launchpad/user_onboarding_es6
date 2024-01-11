@@ -12,8 +12,7 @@
 import UniversalFunctions from "../utils/universalFunctions";
 import Services from "../services";
 import async from "async";
-
-const _ = require("underscore");
+import _ from 'underscore';
 
 const generateRandomNumbers = (numberLength, excludeList) => {
   let arrayList = [];
