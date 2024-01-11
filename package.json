@@ -1,11 +1,11 @@
 {
-  "name": "user-onboarding-module",
+  "name": "wecredits-backend",
   "main": "src/entry.js",
   "description": "A Node based module using Mongodb to onboard user's into a very basic application, secured using JWT authorization",
   "version": "1.1.0",
   "private": false,
   "engines": {
-    "node": "14.*"
+    "node": "16.*"
   },
   "scripts": {
     "start": "npx babel-node src/entry.js",
@@ -20,6 +20,7 @@
     "@hapi/vision": "~6.0.1",
     "async": "~3.2.0",
     "aws-jwt-verify": "~3.1.0",
+    "aws-sdk": "~2.953.0",
     "babel-node": "~0.0.1-security",
     "body-parser": "~1.19.0",
     "cfenv": "~1.2.3",
@@ -33,7 +34,6 @@
     "handlebars": "~4.7.7",
     "hapi-auth-bearer-token": "~8.0.0",
     "hapi-swagger": "~14.1.0",
-    "ibm-cos-sdk": "~1.10.0",
     "joi": "~17.4.0",
     "jsonwebtoken": "~8.5.1",
     "jwt-simple": "~0.5.6",
@@ -44,13 +44,14 @@
     "moment": "~2.29.4",
     "moment-range": "~4.0.2",
     "mongoose": "~5.12.2",
+    "nodemailer": "~6.8.0",
     "path": "~0.12.7",
     "randomstring": "~1.1.5",
     "socket.io": "~4.0.0",
     "underscore": "~1.12.1",
     "validator": "~13.5.2"
   },
-  "author": "Navit Choudhary,Sanchit Dang",
+  "author": "Navit Choudhary, Sanchit Dang",
   "license": "Apache-2.0",
   "devDependencies": {
     "@babel/cli": "~7.13.10",
