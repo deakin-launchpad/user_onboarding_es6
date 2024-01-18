@@ -1,9 +1,9 @@
 import 'dotenv/config';
 import Hapi from "@hapi/hapi";
 import JWTSimple from 'jwt-simple';
-import universalFunctions from "../utils/universalFunctions";
-import Controllers from "../controllers";
-import CONFIG from "../config";
+import universalFunctions from "../utils/universalFunctions.js";
+import Controllers from "../controllers/index.js";
+import CONFIG from "../config/index.js";
 
 class ValidationError extends Error { }
 

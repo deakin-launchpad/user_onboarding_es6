@@ -1,7 +1,7 @@
-import UniversalFunctions from "../../utils/universalFunctions";
 import Joi from "joi";
-import Controller from "../../controllers";
-import Config from '../../config';
+import UniversalFunctions from "../../utils/universalFunctions.js";
+import Controller from "../../controllers/index.js";
+import Config from '../../config/index.js';
 
 const userRegister = {
   method: "POST",

@@ -1,6 +1,6 @@
-import { startMyServer } from "./server/server";
-// Read .env file.
 import 'dotenv/config';
+
+import { startMyServer } from "./server/server.js";
 
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'DEVELOPMENT'

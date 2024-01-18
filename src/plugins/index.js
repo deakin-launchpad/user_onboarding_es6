@@ -1,10 +1,12 @@
 import inert from "@hapi/inert";
-import vision from "@hapi/vision";
+
+import swaggerPlugin from "./swagger.js";
+import authPlugin from "./auth-token.js";
+import amplifyPlugin from "./amplify-auth.js";
 
 export default [
     inert,
-    vision,
-    { plugin: require('./swagger') },
-    { plugin: require('./auth-token') },
-    { plugin: require("./amplify-auth") },
+    { plugin: swaggerPlugin },
+    { plugin: authPlugin },
+    { plugin: amplifyPlugin },
 ];

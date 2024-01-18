@@ -1,7 +1,7 @@
-import Service from '../services';
+import Service from '../services/index.js';
 import async from "async";
-import UniversalFunctions from "../utils/universalFunctions";
-import { superAdmins } from "../config/users";
+import UniversalFunctions from "../utils/universalFunctions.js";
+import { superAdmins } from "../config/users.js";
 
 const insertData = (adminData, callbackParent) => {
     let _skip = false;

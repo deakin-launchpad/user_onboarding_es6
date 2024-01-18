@@ -2,13 +2,20 @@ import 'dotenv/config';
 import Hapi from "@hapi/hapi";
 import Joi from "joi";
 import log4js from "log4js";
-import SwaggerPlugins from "../plugins";
-import * as handlebars from "handlebars";
 import mongoose from "mongoose";
-import CONFIG from "../config/index";
-import Path from "path";
-import BootStrap from "../utils/bootStrap";
-import Routes from "../routes";
+import handlebars from "handlebars";
+import Vision from '@hapi/vision';
+import { fileURLToPath } from 'url';
+import Path from 'path';
+
+import CONFIG from "../config/index.js";
+import SwaggerPlugins from "../plugins/index.js";
+import BootStrap from "../utils/bootStrap.js";
+import Routes from "../routes/index.js";
+
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = Path.join(Path.dirname(__filename), '..', '..');
 
 /**
  * @description Helper file for the server
@@ -16,7 +23,7 @@ import Routes from "../routes";
 class ServerHelper {
 
   setGlobalAppRoot() {
-    global.appRoot = Path.resolve(__dirname)
+    global.appRoot = Path.resolve(__dirname);
   }
 
 
@@ -66,13 +73,14 @@ class ServerHelper {
    * @description Adds Views to the server
    * @param {Hapi.Server} server 
    */
-  addViews(server) {
+  async addViews(server) {
+    await server.register(Vision);
+
     server.views({
       engines: {
-        html: handlebars
+        html: handlebars,
       },
-      relativeTo: __dirname,
-      path: "../../views"
+      path: __dirname + '/views',
     });
   }
 
@@ -98,12 +106,16 @@ class ServerHelper {
    * @param {Hapi.Server} server HAPI Server
    */
   async registerPlugins(server) {
-    await server.register(SwaggerPlugins, {}, err => {
-      if (err)
-        server.log(["error"], "Error while loading plugins : " + err);
-      else
-        server.log(["info"], "Plugins Loaded");
-    });
+    try {
+      await server.register(SwaggerPlugins, {}, err => {
+        if (err)
+          server.log(["error"], "Error while loading plugins : " + err);
+        else
+          server.log(["info"], "Plugins Loaded");
+      });
+    } catch (error) {
+      appLogger.fatal(error);
+    }
   }
 
   configureLog4js = () => {

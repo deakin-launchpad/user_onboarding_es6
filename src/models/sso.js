@@ -1,4 +1,6 @@
-import { Schema, model } from "mongoose";
+import mongoose from "mongoose";
+
+const { Schema } = mongoose;
 
 const sso = new Schema({
   ssoString: { type: Schema.Types.String, required: true },
@@ -6,4 +8,4 @@ const sso = new Schema({
   email: { type: Schema.Types.String },
 });
 
-export default model('sso', sso);
+export default mongoose.model('sso', sso);

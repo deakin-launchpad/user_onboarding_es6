@@ -1,8 +1,8 @@
-import DemoBaseController from "./demoController/demoBaseController";
-import UserBaseController from "./userController/userBaseController";
-import AdminBaseController from "./adminController/adminBaseController";
-import UploadBaseController from "./uploadController/uploadBaseController";
-import SSOBaseController from "./ssoController/ssoBaseController";
+import DemoBaseController from "./demoController/demoBaseController.js";
+import UserBaseController from "./userController/userBaseController.js";
+import AdminBaseController from "./adminController/adminBaseController.js";
+import UploadBaseController from "./uploadController/uploadBaseController.js";
+import SSOBaseController from "./ssoController/ssoBaseController.js";
 
 export default {
   DemoBaseController,

@@ -9,10 +9,10 @@
  * - FATAL - ‘magenta’
  */
 
-import UniversalFunctions from "../utils/universalFunctions";
-import Services from "../services";
 import async from "async";
 import _ from 'underscore';
+import UniversalFunctions from "../utils/universalFunctions.js";
+import Services from "../services/index.js";
 
 const generateRandomNumbers = (numberLength, excludeList) => {
   let arrayList = [];
@@ -51,7 +51,7 @@ const generateRandomNumbers = (numberLength, excludeList) => {
   }
 };
 
-exports.generateUniqueCode = (noOfDigits, userRole, callback) => {
+const generateUniqueCode = (noOfDigits, userRole, callback) => {
   noOfDigits = noOfDigits || 5;
   let excludeArray = [];
   let generatedRandomCode = null;
@@ -94,3 +94,7 @@ exports.generateUniqueCode = (noOfDigits, userRole, callback) => {
     }
   );
 };
+
+export default {
+  generateUniqueCode
+}
