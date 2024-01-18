@@ -1,6 +1,6 @@
-import ServerHelper from "./helpers";
-import SocketManager from "../lib/socketManager";
-import SSOManager from "../lib/ssoManager";
+import ServerHelper from "./helpers.js";
+import SocketManager from "../lib/socketManager.js";
+import SSOManager from "../lib/ssoManager.js";
 
 /**
  * @author Sanchit Dang
@@ -14,11 +14,11 @@ const initServer = async () => {
   await ServerHelper.registerPlugins(server);
 
   //add views
-  ServerHelper.addViews(server);
+  await ServerHelper.addViews(server);
 
   //Default Routes
   ServerHelper.setDefaultRoute(server)
-  
+
   SSOManager.createRoute(server);
 
   // Add routes to Swagger documentation

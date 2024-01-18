@@ -1,21 +1,24 @@
-import AmplifyAuth from "../lib/amplifyAuthServices";
+import AmplifyAuth from "../lib/amplifyAuthServices.js";
 
-exports.register = async function (server, options, next) {
-  //Register Authorization Plugin
-  server.auth.strategy("AmplifyAuth", "bearer-access-token", {
-    allowQueryToken: false,
-    allowMultipleHeaders: true,
-    accessTokenName: "accessToken",
-    validate: async function (request, token, h) {
-      let isValid = false;
-      let credentials = await AmplifyAuth.validateToken(token);
+const amplifyAuthPlugin = {
+  name: "amplify-auth-plugin",
+  register: async function (server, options, next) {
+    //Register Authorization Plugin
+    server.auth.strategy("AmplifyAuth", "bearer-access-token", {
+      allowQueryToken: false,
+      allowMultipleHeaders: true,
+      accessTokenName: "accessToken",
+      validate: async function (request, token, h) {
+        let isValid = false;
+        let credentials = await AmplifyAuth.validateToken(token);
 
-      if (credentials && credentials["userData"]) {
-        isValid = true;
-      }
-      return { isValid, credentials };
-    },
-  });
+        if (credentials && credentials["userData"]) {
+          isValid = true;
+        }
+        return { isValid, credentials };
+      },
+    });
+  }
 };
 
-exports.name = "amplify-auth-plugin";
+export default amplifyAuthPlugin;

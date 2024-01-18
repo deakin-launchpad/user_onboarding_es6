@@ -8,12 +8,12 @@
  * - ERROR - ‘red’
  * - FATAL - ‘magenta’
  */
-import Service from "../../services";
 import async from "async";
-import UniversalFunctions from "../../utils/universalFunctions";
-import TokenManager from "../../lib/tokenManager";
-import CodeGenerator from "../../lib/codeGenerator";
 import _ from "underscore";
+import Service from "../../services/index.js";
+import UniversalFunctions from "../../utils/universalFunctions.js";
+import TokenManager from "../../lib/tokenManager.js";
+import CodeGenerator from "../../lib/codeGenerator.js";
 
 const ERROR = UniversalFunctions.CONFIG.APP_CONSTANTS.STATUS_MSG.ERROR;
 

@@ -9,8 +9,6 @@
 * - FATAL - ‘magenta’
 */
 
-import CONFIG from "../config"
-import UniversalFunctions from "../utils/universalFunctions";
 import async from "async"
 import Path from "path";
 import fsExtra from "fs-extra";
@@ -18,6 +16,8 @@ import fs from "fs";
 import AWS from "aws-sdk";
 import ffmpeg from "fluent-ffmpeg";
 import gm from 'gm';
+import CONFIG from "../config/index.js"
+import UniversalFunctions from "../utils/universalFunctions.js";
 ///*
 // 1) Save Local Files
 // 2) Create Thumbnails
@@ -176,11 +176,11 @@ const saveFile = (fileData, path, callback) => {
 };
 const createThumbnailImage = (path, name, callback) => {
     console.log('------first-----');
-    var gm = gm.subClass({ imageMagick: true });
+    var _gm = gm.subClass({ imageMagick: true });
     var thumbPath = path + 'thumb/' + "Thumb_" + name;
     //var tmp_path = path + "-tmpPath"; //will be put into a temp directory
 
-    gm(path + name)
+    _gm(path + name)
         .resize(160, 160, "!")
         .autoOrient()
         .write(thumbPath, function (err) {

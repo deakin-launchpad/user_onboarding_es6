@@ -9,9 +9,9 @@
 * - FATAL - ‘magenta’
 */
 import 'dotenv/config';
-import Services from "../services";
-import Config from "../config";
 import Jwt from "jsonwebtoken";
+import Services from "../services/index.js";
+import Config from "../config/index.js";
 
 /**
  * 

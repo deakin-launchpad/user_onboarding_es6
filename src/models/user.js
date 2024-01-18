@@ -1,4 +1,6 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose from "mongoose";
+
+const { Schema } = mongoose;
 
 const user = new Schema({
   firstName: { type: String, trim: true, required: true },
@@ -12,7 +14,7 @@ const user = new Schema({
     max: 15
   },
   password: { type: String },
-  deakinSSO: { type: Boolean, default: false},
+  deakinSSO: { type: Boolean, default: false },
   initialPassword: { type: String },
   firstLogin: { type: Boolean, default: false },
   countryCode: { type: String },

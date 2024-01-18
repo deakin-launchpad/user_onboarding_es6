@@ -1,7 +1,7 @@
-import UniversalFunctions from "../../utils/universalFunctions";
-import UploadManager from "../../lib/uploadManager";
-import CONFIG from "../../config";
 import async from 'async';
+import UniversalFunctions from "../../utils/universalFunctions.js";
+import UploadManager from "../../lib/uploadManager.js";
+import CONFIG from "../../config/index.js";
 var ERROR = UniversalFunctions.CONFIG.APP_CONSTANTS.STATUS_MSG.ERROR;
 
 var uploadImage = function (payloadData, callback) {
@@ -107,7 +107,7 @@ var uploadDocument = function (payloadData, callback) {
   })
 }
 
-module.exports = {
+export default {
   uploadImage: uploadImage,
   uploadDocument: uploadDocument,
   uploadVideo: uploadVideo

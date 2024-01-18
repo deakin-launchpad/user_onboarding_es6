@@ -1,6 +1,5 @@
-import GenericService from './genericService';
-
-import ForgetPasswordService from './forgetPasswordService';
+import GenericService from './genericService.js';
+import ForgetPasswordService from './forgetPasswordService.js';
 
 export default {
   UserService: new GenericService('User'),

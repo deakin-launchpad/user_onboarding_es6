@@ -1,5 +1,7 @@
-import { Schema, model } from "mongoose";
-import Config from "../config"
+import mongoose from "mongoose";
+import Config from "../config/index.js";
+
+const { Schema } = mongoose;
 
 const token = new Schema({
     deviceType: { type: String, enum: Object.values(Config.APP_CONSTANTS.DATABASE.DEVICE_TYPES), required: true },
@@ -22,4 +24,4 @@ const token = new Schema({
     updatedAt: { type: Date, default: Date.now() }
 });
 
-export default model('token', token);
+export default mongoose.model('token', token);

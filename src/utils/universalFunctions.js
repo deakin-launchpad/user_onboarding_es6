@@ -13,13 +13,14 @@
 import Joi from "joi";
 import MD5 from "md5";
 import Boom from "@hapi/boom";
-import CONFIG from "../config";
+import CONFIG from "../config/index.js";
 import randomstring from "randomstring";
 import validator from "validator";
-import cryptoRandomString  from "crypto-random-string";
+import cryptoRandomString from "crypto-random-string";
 import Moment from 'moment';
-import { extendMoment } from 'moment-range';
+import momentRange from 'moment-range';
 
+const { extendMoment } = momentRange;
 const moment = extendMoment(Moment);
 
 
@@ -110,15 +111,15 @@ const generateRandomNumber = () => {
   return num;
 };
 
-const generateRandomAlphabet = function (len) {
-  var charSet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-  var randomString = '';
-  for (var i = 0; i < len; i++) {
-    var randomPoz = Math.floor(Math.random() * charSet.length);
-    randomString += charSet.substring(randomPoz, randomPoz + 1);
-    randomString = randomString.toUpperCase();
+const generateRandomAlphabet = (len) => {
+  const charSet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+  let _randomString = '';
+  for (let i = 0; i < len; i++) {
+    let randomPoz = Math.floor(Math.random() * charSet.length);
+    _randomString += charSet.substring(randomPoz, randomPoz + 1);
+    _randomString = _randomString.toUpperCase();
   }
-  return randomString;
+  return _randomString;
 }
 
 const CryptData = (stringToCrypt) => {

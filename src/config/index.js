@@ -1,6 +1,6 @@
-import APP_CONSTANTS from "./appConstants";
-import AWS_S3_CONFIG from "./awsS3Config";
-import DB_CONFIG from "./dbConfig";
+import APP_CONSTANTS from "./appConstants.js";
+import AWS_S3_CONFIG from "./awsS3Config.js";
+import DB_CONFIG from "./dbConfig.js";
 
 
 export default {

@@ -1,7 +1,7 @@
 
-import UniversalFunctions from "../../utils/universalFunctions";
 import Joi from "joi";
-import Controller from "../../controllers";
+import UniversalFunctions from "../../utils/universalFunctions.js";
+import Controller from "../../controllers/index.js";
 
 const Config = UniversalFunctions.CONFIG;
 
@@ -89,5 +89,5 @@ const demoAmplifyAuth = {
   },
 };
 
-const DemoBaseRoute = [demoApi,demoAmplifyAuth];
+const DemoBaseRoute = [demoApi, demoAmplifyAuth];
 export default DemoBaseRoute;

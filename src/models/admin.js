@@ -1,5 +1,7 @@
-import mongoose, { Schema } from "mongoose";
-import Config from "../config"
+import mongoose from "mongoose";
+import Config from "../config/index.js"
+
+const { Schema } = mongoose;
 
 const admin = new Schema({
     emailId: { type: String, unique: true, sparse: true },

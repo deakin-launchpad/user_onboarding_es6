@@ -1,23 +1,26 @@
-import TokenManager from '../lib/tokenManager';
+import TokenManager from '../lib/tokenManager.js';
 import AuthBearer from 'hapi-auth-bearer-token';
 
-exports.register = async function (server, options, next) {
+const authTokenPlugin = {
+    name: "auth-token-plugin",
+    register: async function (server, options, next) {
 
-    await server.register(AuthBearer)
-    //Register Authorization Plugin
-    server.auth.strategy('UserAuth', 'bearer-access-token', {
-        allowQueryToken: false,
-        allowMultipleHeaders: true,
-        accessTokenName: 'accessToken',
-        validate: async function (request, token, h) {
-            let isValid = false;
-            let credentials = await TokenManager.verifyToken(token)
-            if (credentials && credentials['userData']) {
-                isValid = true;
+        await server.register(AuthBearer)
+        //Register Authorization Plugin
+        server.auth.strategy('UserAuth', 'bearer-access-token', {
+            allowQueryToken: false,
+            allowMultipleHeaders: true,
+            accessTokenName: 'accessToken',
+            validate: async function (request, token, h) {
+                let isValid = false;
+                let credentials = await TokenManager.verifyToken(token)
+                if (credentials && credentials['userData']) {
+                    isValid = true;
+                }
+                return { isValid, credentials };
             }
-            return { isValid, credentials };
-        }
-    });
+        });
+    }
 };
 
-exports.name = 'auth-token-plugin'
+export default authTokenPlugin;
