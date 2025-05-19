@@ -1,28 +1,24 @@
-
-
-
 import UniversalFunctions from "../../utils/universalFunctions";
 import Joi from "joi";
 import Controller from "../../controllers";
 
-const uploadImage =
-{
+const uploadImage = {
   method: 'POST',
   path: '/api/upload/uploadImage',
-  handler: function (request, reply) {
-    var payloadData = request.payload;
-    return new Promise((resolve, reject) => {
-      Controller.UploadBaseController.uploadImage(payloadData, function (err, data) {
-        if (err) {
-          reject(UniversalFunctions.sendError(err));
-        } else {
-          resolve(UniversalFunctions.sendSuccess(UniversalFunctions.CONFIG.APP_CONSTANTS.STATUS_MSG.SUCCESS.DEFAULT, data))
-        }
-      });
-    });
+  handler: async (request, h) => {
+    try {
+      const payloadData = request.payload;
+      const data = await Controller.UploadBaseController.uploadImage(payloadData);
+      return UniversalFunctions.sendSuccess(
+        UniversalFunctions.CONFIG.APP_CONSTANTS.STATUS_MSG.SUCCESS.DEFAULT,
+        data
+      );
+    } catch (error) {
+      return UniversalFunctions.sendError(error);
+    }
   },
   options: {
-    description: 'image upload',
+    description: 'Upload an image file',
     tags: ['api', 'upload', 'image'],
     payload: {
       maxBytes: 20715200,
@@ -35,7 +31,7 @@ const uploadImage =
         imageFile: Joi.any()
           .meta({ swaggerType: 'file' })
           .required()
-          .description('image file')
+          .description('Image file to upload')
       }).label("Upload: Image"),
       failAction: UniversalFunctions.failActionFunction
     },
@@ -45,27 +41,25 @@ const uploadImage =
       }
     }
   }
-}
+};
 
-
-const uploadVideo =
-{
+const uploadVideo = {
   method: 'POST',
   path: '/api/upload/uploadVideo',
-  handler: function (request, reply) {
-    var payloadData = request.payload;
-    return new Promise((resolve, reject) => {
-      Controller.UploadBaseController.uploadVideo(payloadData, function (err, data) {
-        if (err) {
-          reject(UniversalFunctions.sendError(err));
-        } else {
-          resolve(UniversalFunctions.sendSuccess(UniversalFunctions.CONFIG.APP_CONSTANTS.STATUS_MSG.SUCCESS.DEFAULT, data))
-        }
-      });
-    });
+  handler: async (request, h) => {
+    try {
+      const payloadData = request.payload;
+      const data = await Controller.UploadBaseController.uploadVideo(payloadData);
+      return UniversalFunctions.sendSuccess(
+        UniversalFunctions.CONFIG.APP_CONSTANTS.STATUS_MSG.SUCCESS.DEFAULT,
+        data
+      );
+    } catch (error) {
+      return UniversalFunctions.sendError(error);
+    }
   },
   options: {
-    description: 'video upload',
+    description: 'Upload a video file',
     tags: ['api', 'upload', 'video'],
     payload: {
       maxBytes: 207152000,
@@ -78,7 +72,7 @@ const uploadVideo =
         videoFile: Joi.any()
           .meta({ swaggerType: 'file' })
           .required()
-          .description('video file')
+          .description('Video file to upload')
       }).label("Upload: Video"),
       failAction: UniversalFunctions.failActionFunction
     },
@@ -88,27 +82,25 @@ const uploadVideo =
       }
     }
   }
-}
+};
 
-
-const uploadDocument =
-{
+const uploadDocument = {
   method: 'POST',
   path: '/api/upload/uploadDocument',
-  handler: function (request, reply) {
-    var payloadData = request.payload;
-    return new Promise((resolve, reject) => {
-      Controller.UploadBaseController.uploadDocument(payloadData, function (err, data) {
-        if (err) {
-          reject(UniversalFunctions.sendError(err));
-        } else {
-          resolve(UniversalFunctions.sendSuccess(UniversalFunctions.CONFIG.APP_CONSTANTS.STATUS_MSG.SUCCESS.DEFAULT, data))
-        }
-      });
-    });
+  handler: async (request, h) => {
+    try {
+      const payloadData = request.payload;
+      const data = await Controller.UploadBaseController.uploadDocument(payloadData);
+      return UniversalFunctions.sendSuccess(
+        UniversalFunctions.CONFIG.APP_CONSTANTS.STATUS_MSG.SUCCESS.DEFAULT,
+        data
+      );
+    } catch (error) {
+      return UniversalFunctions.sendError(error);
+    }
   },
   options: {
-    description: 'upload document',
+    description: 'Upload a document file',
     tags: ['api', 'upload', 'document'],
     payload: {
       maxBytes: 20715200,
@@ -121,7 +113,7 @@ const uploadDocument =
         documentFile: Joi.any()
           .meta({ swaggerType: 'file' })
           .required()
-          .description('document file')
+          .description('Document file to upload')
       }).label("Upload: Document"),
       failAction: UniversalFunctions.failActionFunction
     },
@@ -134,5 +126,7 @@ const uploadDocument =
 };
 
 export default [
-  uploadImage, uploadDocument, uploadVideo
+  uploadImage,
+  uploadDocument,
+  uploadVideo
 ];

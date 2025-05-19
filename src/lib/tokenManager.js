@@ -76,7 +76,7 @@ const setTokenInDB = function (userId, userType, tokenData, callback) {
         }
       });
     } else {
-      Services.TokenService.updateRecord(criteria, { ...tokenData, updatedAt: Date.now() }, (err) => {
+      Services.TokenService.updateRecord(criteria, { ...tokenData, updatedAt: Date.now() }, {}, (err, _) => {
         if (err) callback(err);
         else {
           callback();
@@ -84,7 +84,6 @@ const setTokenInDB = function (userId, userType, tokenData, callback) {
       });
     }
   });
-
 };
 
 /**

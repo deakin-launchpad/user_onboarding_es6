@@ -23,14 +23,16 @@ const swaggerOptions = {
     }
 };
 
-export function register(server, options) {
-    server.register({
-        plugin: HapiSwagger,
-        options: swaggerOptions
-    }, {}, (err) => {
-        if (err) server.log(['error'], 'hapi-swagger load error: ' + err)
-        else server.log(['info'], 'hapi-swagger interface loaded')
-    });
+export async function register(server, options) {
+    try {
+        await server.register({
+            plugin: HapiSwagger,
+            options: swaggerOptions
+        });
+        server.log(['info'], 'hapi-swagger interface loaded');
+    } catch (err) {
+        server.log(['error'], 'hapi-swagger load error: ' + err);
+    }
 }
 
 export const name = 'swagger-plugin';

@@ -50,12 +50,19 @@ class ServerHelper {
    * @returns {Hapi.Server} A Hapi Server
    */
   createServer() {
-    let server = new Hapi.Server({
+    let server = Hapi.server({
       app: {
         name: process.env.APP_NAME || "default"
       },
       port: process.env.HAPI_PORT || 8000,
-      routes: { cors: true }
+      routes: {
+        cors: true,
+        validate: {
+          failAction: (request, h, err) => {
+            throw err;
+          }
+        }
+      }
     });
     server.validator(Joi);
     return server;
@@ -146,18 +153,14 @@ class ServerHelper {
   }
 
   connectMongoDB() {
-    const mongooseOptions = {
-      useNewUrlParser: true,
-      useUnifiedTopology: true
-    };
-    mongoose.set('useCreateIndex', true);
-    mongoose.set('useFindAndModify', false);
-    mongoose.connect(CONFIG.DB_CONFIG.mongo.URI, mongooseOptions, (err) => {
-      if (err) {
+    mongoose.connect(CONFIG.DB_CONFIG.mongo.URI)
+      .then(() => {
+        mongoLogger.info('MongoDB Connected');
+      })
+      .catch((err) => {
         mongoLogger.debug("DB Error: ", err);
         process.exit(1);
-      } else mongoLogger.info('MongoDB Connected');
-    });
+      });
   }
 }
 

@@ -1,7 +1,6 @@
 import MODELS from "../models/index";
 
 /**
- * @author Sanchit Dang
  * @description Generic Service Template
  */
 export default class GenericService {
@@ -21,7 +20,6 @@ export default class GenericService {
 
     /**
      * @private
-     * @author Sanchit Dang
      * @description Validate if models exists
      * @param {String} modelName name of the model 
      */
@@ -30,91 +28,155 @@ export default class GenericService {
     }
 
     /**
-     * @author Sanchit Dang
-     * @description Update a record in DB
-     * @param {Object} criteria 
-     * @param {Object} data 
-     * @param {Object} options 
-     * @param {Function} callback 
-     */
-    updateRecord(criteria, data, options, callback) {
+ * @description Update a record in DB
+ * @param {Object} criteria 
+ * @param {Object} data 
+ * @param {Object} options 
+ * @param {Function} [callback] - Optional
+ * @returns {Promise|void}
+ */
+    async updateRecord(criteria, data, options, callback) {
         data.updatedAt = Date.now();
         options.lean = true;
         options.new = true;
-        MODELS[this.modelName].findOneAndUpdate(criteria, data, options, callback);
+        MODELS[this.modelName].findOneAndUpdate(criteria, data, options)
+            .then((result) => {
+                if (callback && typeof callback === 'function') {
+                    return callback(null, result);
+                }
+                return result;
+            }).catch((err) => {
+                if (callback && typeof callback === 'function') {
+                    return callback(err, null);
+                }
+                throw err;
+            });
     }
 
     /**
-     * @author Sanchit Dang
      * @description Insert a record in DB
      * @param {Object} data 
-     * @param {Function} callback 
+     * @param {Function} [callback] - Optional
+     * @returns {Promise|void}
      */
-    createRecord(data, callback) {
-        MODELS[this.modelName](data).save(callback);
+    async createRecord(data, callback) {
+        try {
+            const result = await new MODELS[this.modelName](data).save();
+            if (callback && typeof callback === 'function') {
+                return callback(null, result);
+            }
+        } catch (err) {
+            if (callback && typeof callback === 'function') {
+                return callback(err, null);
+            }
+            throw err;
+        }
     }
 
     /**
-     * @author Sanchit Dang
      * @description Hard delete a record
      * @param {Object} criteria 
-     * @param {Function} callback 
+     * @param {Function} [callback] - Optional
+     * @returns {Promise|void}
      */
-    deleteRecord(criteria, callback) {
-        MODELS[this.modelName].findOneAndRemove(criteria, callback);
+    async deleteRecord(criteria, callback) {
+        try {
+            const result = await MODELS[this.modelName]
+                .findOneAndRemove(criteria)
+                .exec();
+            if (callback && typeof callback === 'function') {
+                return callback(null, result);
+            }
+        } catch (err) {
+            if (callback && typeof callback === 'function') {
+                return callback(err, null);
+            }
+            throw err;
+        }
     }
 
     /**
-     * @author Sanchit Dang
-     * @description Retrive records
+     * @description Retrieve records
      * @param {Object} criteria 
      * @param {Object} projection 
      * @param {Object} options 
      * @param {Function} callback 
      */
-    getRecord(criteria, projection, options, callback) {
+    async getRecord(criteria, projection, options, callback) {
         options.lean = true;
-        MODELS[this.modelName].find(criteria, projection, options, callback);
+        try {
+            const result = await MODELS[this.modelName].find(criteria, projection, options).exec();
+            if (callback && typeof callback === 'function') {
+                return callback(null, result);
+            }
+            return result;
+        } catch (err) {
+            if (callback && typeof callback === 'function') {
+                return callback(err, null);
+            }
+            throw err;
+        }
     }
 
     /**
-     * @author Sanchit Dang
-     * @description Retrive records while populating them
-     * @param {Object} criteria 
-     * @param {Object} projection 
-     * @param {Object} populate 
-     * @param {Function} callback 
+ * @description Retrieve records while populating them
+ * @param {Object} criteria 
+ * @param {Object} projection 
+ * @param {Object} populate 
+ * @param {Function} [callback] - Optional
+ * @returns {Promise|void}
+ */
+    async getPopulatedRecords(criteria, projection, populate, callback) {
+        try {
+            const result = await MODELS[this.modelName]
+                .find(criteria)
+                .select(projection)
+                .populate(populate)
+                .exec();
+            if (callback && typeof callback === 'function') {
+                return callback(null, result);
+            }
+            return result;
+        } catch (err) {
+            if (callback && typeof callback === 'function') {
+                return callback(err, null);
+            }
+            throw err;
+        }
+    }
+
+    /**
+     * @description Aggregate records
+     * @param {Array} criteria 
+     * @param {Function} [callback] - Optional
+     * @returns {Promise|void}
      */
-    getPopulatedRecords(criteria, projection, populate, callback) {
-        MODELS[this.modelName].find(criteria).select(projection).populate(populate).exec(callback)
+    async aggregate(criteria, callback) {
+        try {
+            const result = await MODELS[this.modelName].aggregate(criteria).exec();
+            if (callback && typeof callback === 'function') {
+                return callback(null, result);
+            }
+            return result;
+        } catch (err) {
+            if (callback && typeof callback === 'function') {
+                return callback(err, null);
+            }
+            throw err;
+        }
     }
 
     /**
-     * @author Sanchit Dang
-     * @description Aggregate Records
-     * @param {Object} criteria 
-     * @param {Function} callback 
-     */
-    aggregate(criteria, callback) {
-        MODELS[this.modelName].aggregate(criteria, callback);
-    }
-
-
-    /**
-     * @author Sanchit Dang
-     * @description get records using promise
+     * @description Get records using Promise (cleaned up)
      * @param {Object} criteria 
      * @param {Object} projection 
      * @param {Object} options 
+     * @returns {Promise}
      */
     getRecordUsingPromise(criteria, projection, options) {
         options.lean = true;
-        return new Promise((resolve, reject) => {
-            MODELS[this.modelName].find(criteria, projection, options, function (err, data) {
-                if (err) reject(err);
-                else resolve(data);
-            });
-        });
+        return MODELS[this.modelName]
+            .find(criteria, projection, options)
+            .exec();
     }
-
 }

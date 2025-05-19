@@ -250,6 +250,7 @@ const loginUser = (payloadData, callback) => {
         Service.UserService.getRecord(criteria, {}, option, (err, result) => {
           if (err) cb(err);
           else {
+            console.log("1. Result", result);
             userFound = (result && result[0]) || null;
             cb();
           }
@@ -264,7 +265,7 @@ const loginUser = (payloadData, callback) => {
             if (
               userFound &&
               userFound.password !=
-                UniversalFunctions.CryptData(payloadData.password)
+              UniversalFunctions.CryptData(payloadData.password)
             ) {
               cb(ERROR.INCORRECT_PASSWORD);
             }
@@ -296,6 +297,7 @@ const loginUser = (payloadData, callback) => {
           (err, result) => {
             if (err) cb(err);
             else {
+              console.log("2. Result", result);
               userFound = (result && result[0]) || null;
               cb();
             }
@@ -316,6 +318,7 @@ const loginUser = (payloadData, callback) => {
               if (err) {
                 cb(err);
               } else {
+                console.log("3. Result", output);
                 if (output && output.accessToken) {
                   accessToken = output && output.accessToken;
                   cb();
@@ -340,6 +343,7 @@ const loginUser = (payloadData, callback) => {
     (err, data) => {
       if (err) callback(err);
       else {
+        console.log("4. Result: end of login");
         callback(null, {
           accessToken: accessToken,
           userDetails: UniversalFunctions.deleteUnnecessaryUserData(userFound),
