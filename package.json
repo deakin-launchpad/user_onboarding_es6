@@ -45,7 +45,7 @@
     "md5": "~2.3.0",
     "moment": "~2.30.1",
     "moment-range": "~4.0.2",
-    "mongoose": "~8.1.1",
+    "mongoose": "~8.9.5",
     "nodemailer": "~6.9.9",
     "path": "~0.12.7",
     "randomstring": "~1.2.3",
